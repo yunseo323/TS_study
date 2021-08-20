@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": true //typing 해줘야 함
+  },
+  "include": ["./src/**/*"]
+}
