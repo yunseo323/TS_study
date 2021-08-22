@@ -26,4 +26,4 @@ function askQuestion(answer: Answer){
     if(answer===Answer.No) console.log("오답입니다");
 }
 askQuestion(Answer.Yes); //correct
-askQuestion("yes") //error : enum 에 지정되어 있는 Answer 타입을 넘겨야 함
+//askQuestion("yes") //error : enum 에 지정되어 있는 Answer 타입을 넘겨야 함
