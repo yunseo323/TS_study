@@ -1,23 +1,24 @@
- interface PhoneNumberDictionary {
-  [phone: string]: {  //key 값은 string, 그 안의 값은 number
-    num: number; 
+interface PhoneNumberDictionary  {
+  [phone: string]: {
+    num: number;
   };
 }
 
 interface Contact {
   name: string;
   address: string;
-  phones: PhoneNumberDictionary; //home, office
+  phones: PhoneNumberDictionary;
 }
-enum PhoneType {
+
+enum PhoneType{
   Home = "home",
   Office = "office",
-  Studio = "studio",
+  Studio = "Studio"
 }
-// api 모방 함수
+// api
 // TODO: 아래 함수의 반환 타입을 지정해보세요.
-// api 를 호출해서, 그 응답의 규격을 정할때 제네릭을 많이 씀
-function fetchContacts(): Promise<Contact[]>{ //
+// Promise: 비동기적이라 타입 추론이 되지 않는다 -> 제네릭을 이용해 타입을 달아줘야 함
+function fetchContacts(): Promise<Contact[]> { 
   // TODO: 아래 변수의 타입을 지정해보세요.
   const contacts: Contact[] = [
     {
@@ -62,9 +63,9 @@ function fetchContacts(): Promise<Contact[]>{ //
 // main
 class AddressBook {
   // TODO: 아래 변수의 타입을 지정해보세요.
-  contacts: Contact[] = [];
+  contacts:Contact[] = [];
 
-  constructor() {
+  constructor() { //constructor 함수는 type 선언 x
     this.fetchData();
   }
 
@@ -83,24 +84,26 @@ class AddressBook {
     return this.contacts.filter(contact => contact.address === address);
   }
 
-  findContactByPhone(phoneNumber:number , phoneType: PhoneType): Contact[] {
+  findContactByPhone(phoneNumber:number, phoneType: PhoneType):Contact[] { //phoneType에서 오탈자를 예방하기 위해 이넘을 사용해보자!
     return this.contacts.filter(
       contact => contact.phones[phoneType].num === phoneNumber
     );
   }
 
-  addContact(contact: Contact): void {
+  addContact(contact:Contact): void {
     this.contacts.push(contact);
   }
 
   displayListByName():string[] {
-    return this.contacts.map(contact => contact.name);
+    return this.contacts.map(contact => contact.name); //name 배열이 리턴됨
   }
 
-  displayListByAddress():string[] {
-    return this.contacts.map(contact => contact.address);
+  displayListByAddress(): string[] {
+    return this.contacts.map(contact => contact.address); //address 배열이 리턴됨
   }
   /* ------------------------------------------------ */
 }
+
+let heroes = []
 
 new AddressBook();
