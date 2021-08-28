@@ -1,20 +1,4 @@
-interface PhoneNumberDictionary  {
-  [phone: string]: {
-    num: number;
-  };
-}
-
-interface Contact {
-  name: string;
-  address: string;
-  phones: PhoneNumberDictionary;
-}
-
-enum PhoneType{
-  Home = "home",
-  Office = "office",
-  Studio = "Studio"
-}
+import {Contact,PhoneType} from "./types"
 // api
 // TODO: 아래 함수의 반환 타입을 지정해보세요.
 // Promise: 비동기적이라 타입 추론이 되지 않는다 -> 제네릭을 이용해 타입을 달아줘야 함
