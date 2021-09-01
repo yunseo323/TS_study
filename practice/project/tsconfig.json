@@ -4,6 +4,7 @@
         "target": "ES5",
         "outDir": "./built",
         "moduleResolution": "Node",
+        "lib": ["ES2015","DOM","DOM.Iterable"]
     },
     "include": ["./src/**/*"] // 어떤 폴더를 대상으로 typescript를 컴파일 시킬 것인지 
     //src 폴더 아래 모든 파일 대상
