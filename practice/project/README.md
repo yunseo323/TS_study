@@ -20,6 +20,14 @@
 2. 명시적인 `any` 선언하기
     - `tsconfig.json` 파일에 `noImplicitAny` 값을 `true`로 추가
         (모든 변수에 any 속성이 지정됨)
+    - 가능한한 구체적인 타입으로 타입 정의
+
+3. 프로젝트 환경 구성
+    - babel, eslint, prettier 등의 환경 설정
+
+4. 외부 라이브러리 모듈화
+    - [x] 외부 라이브러리 에러 처리
+    
 ## 참고 자료
 
 - [존스 홉킨스 코로나 현황](https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6)
