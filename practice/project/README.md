@@ -28,6 +28,14 @@
 4. 외부 라이브러리 모듈화
     - [x] 외부 라이브러리 에러 처리
     
+5. api 함수 타입 정의
+    - `import axios, { AxiosResponse } from 'axios';` 로, axios를 type으로 구현하고 적용할 수 있었음
+        
+        ex) `Promise<AxiosResponse<세부타입>>`
+    - await으로 data 받기
+    - reduce 함수 사용
+    - 타입 외부 모듈 분리하기 (export interface)
+    - toString() 이용하기
 ## 참고 자료
 
 - [존스 홉킨스 코로나 현황](https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6)
