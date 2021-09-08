@@ -40,7 +40,6 @@ var axios_1 = require("axios");
 var chart_js_1 = require("chart.js");
 // utils
 function $(selector) {
-    //util
     return document.querySelector(selector);
 }
 function getUnixTimestamp(date) {
@@ -58,6 +57,7 @@ var recoveredList = $('.recovered-list');
 var deathSpinner = createSpinnerElement('deaths-spinner');
 var recoveredSpinner = createSpinnerElement('recovered-spinner');
 function createSpinnerElement(id) {
+    //로딩이라는 것을 표현
     var wrapperDiv = document.createElement('div');
     wrapperDiv.setAttribute('id', id);
     wrapperDiv.setAttribute('class', 'spinner-wrapper flex justify-center align-center');
@@ -70,12 +70,12 @@ function createSpinnerElement(id) {
 }
 // state
 var isDeathLoading = false;
-var isRecoveredLoading = false;
 // api
 function fetchCovidSummary() {
     var url = 'https://api.covid19api.com/summary';
     return axios_1.default.get(url);
 }
+//fetchCovidSummary().then(res=> res.data.)
 var CovidStatus;
 (function (CovidStatus) {
     CovidStatus["Confirmed"] = "confirmed";
@@ -138,12 +138,14 @@ function handleListClick(event) {
     });
 }
 function setDeathsList(data) {
-    var sorted = data.sort(function (a, b) { return getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date); });
+    var sorted = data.sort(function (a, b) {
+        return getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date);
+    });
     sorted.forEach(function (value) {
         var li = document.createElement('li');
         li.setAttribute('class', 'list-item-b flex align-center');
         var span = document.createElement('span');
-        span.textContent = value.Cases;
+        span.textContent = value.Cases.toString();
         span.setAttribute('class', 'deaths');
         var p = document.createElement('p');
         p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
@@ -156,15 +158,17 @@ function clearDeathList() {
     deathsList.innerHTML = null;
 }
 function setTotalDeathsByCountry(data) {
-    deathsTotal.innerText = data[0].Cases;
+    deathsTotal.innerText = data[0].Cases.toString();
 }
 function setRecoveredList(data) {
-    var sorted = data.sort(function (a, b) { return getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date); });
+    var sorted = data.sort(function (a, b) {
+        return getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date);
+    });
     sorted.forEach(function (value) {
         var li = document.createElement('li');
         li.setAttribute('class', 'list-item-b flex align-center');
         var span = document.createElement('span');
-        span.textContent = value.Cases;
+        span.textContent = value.Cases.toString();
         span.setAttribute('class', 'recovered');
         var p = document.createElement('p');
         p.textContent = new Date(value.Date).toLocaleDateString().slice(0, -1);
@@ -177,7 +181,7 @@ function clearRecoveredList() {
     recoveredList.innerHTML = null;
 }
 function setTotalRecoveredByCountry(data) {
-    recoveredTotal.innerText = data[0].Cases;
+    recoveredTotal.innerText = data[0].Cases.toString();
 }
 function startLoadingAnimation() {
     deathsList.appendChild(deathSpinner);
@@ -206,7 +210,11 @@ function setupData() {
     });
 }
 function renderChart(data, labels) {
-    var ctx = $('#lineChart').getContext('2d');
+    var lineChart = $('#lineChart');
+    var ctx = lineChart.getContext('2d'); //Element 형식에 getContext 속성이 없습니다
+    //#lineChart가 canvas에 있음
+    // 1. ('#lineChart') as HTMLCavasElement 타입 단언 가능
+    // 2. const lineChart = $("#lineChart") as HTMLCanvasElement이라고 선언
     chart_js_1.Chart.defaults.color = '#f5eaea';
     chart_js_1.Chart.defaults.font.family = 'Exo 2';
     new chart_js_1.Chart(ctx, {
@@ -226,7 +234,9 @@ function renderChart(data, labels) {
     });
 }
 function setChartData(data) {
-    var chartData = data.slice(-14).map(function (value) { return value.Cases; });
+    var chartData = data
+        .slice(-14)
+        .map(function (value) { return value.Cases; });
     var chartLabel = data
         .slice(-14)
         .map(function (value) {
@@ -235,13 +245,13 @@ function setChartData(data) {
     renderChart(chartData, chartLabel);
 }
 function setTotalConfirmedNumber(data) {
-    confirmedTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalConfirmed); }, 0);
+    confirmedTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalConfirmed); }, 0).toString(); // .toString을 이용해서 문자열로 대입해줌
 }
 function setTotalDeathsByWorld(data) {
-    deathsTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalDeaths); }, 0);
+    deathsTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalDeaths); }, 0).toString();
 }
 function setTotalRecoveredByWorld(data) {
-    recoveredTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalRecovered); }, 0);
+    recoveredTotal.innerText = data.Countries.reduce(function (total, current) { return (total += current.TotalRecovered); }, 0).toString();
 }
 function setCountryRanksByConfirmedCases(data) {
     var sorted = data.Countries.sort(function (a, b) { return b.TotalConfirmed - a.TotalConfirmed; });
@@ -250,7 +260,7 @@ function setCountryRanksByConfirmedCases(data) {
         li.setAttribute('class', 'list-item flex align-center');
         li.setAttribute('id', value.Slug);
         var span = document.createElement('span');
-        span.textContent = value.TotalConfirmed;
+        span.textContent = value.TotalConfirmed.toString();
         span.setAttribute('class', 'cases');
         var p = document.createElement('p');
         p.setAttribute('class', 'country');

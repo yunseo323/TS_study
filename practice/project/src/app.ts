@@ -9,8 +9,11 @@ import {
   Title,
 } from 'chart.js';
 //타입 모듈
-import { 
-  Country, CountrySummaryInfo, CountrySummaryResponse, CovidSummaryResponse 
+import {
+  Country,
+  CountrySummaryInfo,
+  CountrySummaryResponse,
+  CovidSummaryResponse,
 } from './covid/index'; //ts에서 자동으로 import 해주는 기능이 있음
 
 // utils
@@ -35,6 +38,7 @@ const deathSpinner = createSpinnerElement('deaths-spinner');
 const recoveredSpinner = createSpinnerElement('recovered-spinner');
 
 function createSpinnerElement(id: string) {
+  //로딩이라는 것을 표현
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
@@ -51,7 +55,6 @@ function createSpinnerElement(id: string) {
 
 // state
 let isDeathLoading = false;
-const isRecoveredLoading = false;
 
 // api
 function fetchCovidSummary(): Promise<AxiosResponse<CovidSummaryResponse>> {
@@ -66,7 +69,10 @@ enum CovidStatus {
   Deaths = 'deaths',
 }
 
-function fetchCountryInfo(countryCode: string, status: CovidStatus) {
+function fetchCountryInfo(
+  countryCode: string,
+  status: CovidStatus
+): Promise<AxiosResponse<CountrySummaryResponse>> {
   // params: confirmed, recovered, deaths
   const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
   return axios.get(url);
@@ -83,7 +89,8 @@ function initEvents() {
   rankList.addEventListener('click', handleListClick);
 }
 
-async function handleListClick(event: MouseEvent) { //MouseEvent 라는 타입 존재
+async function handleListClick(event: MouseEvent) {
+  //MouseEvent 라는 타입 존재
   let selectedId;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -101,7 +108,7 @@ async function handleListClick(event: MouseEvent) { //MouseEvent 라는 타입 �
   clearRecoveredList();
   startLoadingAnimation();
   isDeathLoading = true;
-  const { data: deathResponse } = await fetchCountryInfo: Promise<AxiosResponse<CovidSummaryResponse>>(
+  const { data: deathResponse } = await fetchCountryInfo(
     selectedId,
     CovidStatus.Deaths
   );
@@ -124,8 +131,8 @@ async function handleListClick(event: MouseEvent) { //MouseEvent 라는 타입 �
 
 function setDeathsList(data: CountrySummaryResponse) {
   const sorted = data.sort(
-    (a: CountrySummaryInfo, b: CountrySummaryInfo) => 
-    getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
+    (a: CountrySummaryInfo, b: CountrySummaryInfo) =>
+      getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
   sorted.forEach((value: any) => {
     const li = document.createElement('li');
@@ -145,14 +152,14 @@ function clearDeathList() {
   deathsList.innerHTML = null;
 }
 
-function setTotalDeathsByCountry(data: CountrySummaryResponse){
+function setTotalDeathsByCountry(data: CountrySummaryResponse) {
   deathsTotal.innerText = data[0].Cases.toString();
 }
 
 function setRecoveredList(data: CountrySummaryResponse) {
   const sorted = data.sort(
     (a: CountrySummaryInfo, b: CountrySummaryInfo) =>
-     getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
+      getUnixTimestamp(b.Date) - getUnixTimestamp(a.Date)
   );
   sorted.forEach((value: any) => {
     const li = document.createElement('li');
@@ -195,8 +202,12 @@ async function setupData() {
   setLastUpdatedTimestamp(data);
 }
 
-function renderChart(data: any, labels: any) {
-  const ctx = $('#lineChart').getContext('2d'); //Element 형식에 getContext 속성이 없습니다
+function renderChart(data: number[], labels: string[]) {
+  const lineChart = $('#lineChart') as HTMLCanvasElement;
+  const ctx = lineChart.getContext('2d'); //Element 형식에 getContext 속성이 없습니다
+  //#lineChart가 canvas에 있음
+  // 1. ('#lineChart') as HTMLCavasElement 타입 단언 가능
+  // 2. const lineChart = $("#lineChart") as HTMLCanvasElement이라고 선언
   Chart.defaults.color = '#f5eaea';
   Chart.defaults.font.family = 'Exo 2';
   new Chart(ctx, {
@@ -216,18 +227,20 @@ function renderChart(data: any, labels: any) {
   });
 }
 
-function setChartData(data: any) {
-  const chartData = data.slice(-14).map((value: any) => value.Cases);
+function setChartData(data: CountrySummaryResponse) {
+  const chartData = data
+    .slice(-14)
+    .map((value: CountrySummaryInfo) => value.Cases);
   const chartLabel = data
     .slice(-14)
-    .map((value: any) =>
+    .map((value: CountrySummaryInfo) =>
       new Date(value.Date).toLocaleDateString().slice(5, -1)
     );
   renderChart(chartData, chartLabel);
 }
 
 function setTotalConfirmedNumber(data: CovidSummaryResponse) {
-  confirmedTotal.innerText = data. Countries.reduce(
+  confirmedTotal.innerText = data.Countries.reduce(
     (total: number, current: Country) => (total += current.TotalConfirmed),
     0
   ).toString(); // .toString을 이용해서 문자열로 대입해줌
@@ -239,7 +252,7 @@ function setTotalDeathsByWorld(data: CovidSummaryResponse) {
     0
   ).toString();
 }
- 
+
 function setTotalRecoveredByWorld(data: CovidSummaryResponse) {
   recoveredTotal.innerText = data.Countries.reduce(
     (total: number, current: Country) => (total += current.TotalRecovered),

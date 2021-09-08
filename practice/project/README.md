@@ -36,6 +36,8 @@
     - reduce 함수 사용
     - 타입 외부 모듈 분리하기 (export interface)
     - toString() 이용하기
+
+6. 차트 라이브러리 타입 정의
 ## 참고 자료
 
 - [존스 홉킨스 코로나 현황](https://www.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6)
