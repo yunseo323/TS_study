@@ -1,13 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import {
-  CategoryScale,
-  Chart,
-  LinearScale,
-  LineController,
-  LineElement,
-  PointElement,
-  Title,
-} from 'chart.js';
+import { Chart } from 'chart.js';
 //타입 모듈
 import {
   Country,
